@@ -43,6 +43,7 @@ window.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
 #initialize game
 snake = Tile(5*TILE_SIZE, 5*TILE_SIZE) #single, tile, snake's head
 food = Tile(10*TILE_SIZE, 10*TILE_SIZE)
+snake_body = [] #multiple snake tiles
 velocityX = 0 
 velocityY = 0 
 
@@ -65,6 +66,12 @@ def change_direction(e): #e = event
 
 def move():
     global snake
+    
+    #collision
+    if (snake.x == food.x and snake.y == food.y):
+        snake_body.append(Tile(food.x, food.y))
+        food.x = random.randint(0, COLS-1) * TILE_SIZE
+        food.y = random.randint(0, COLS-1) * TILE_SIZE
     
     snake.x += velocityX * TILE_SIZE
     snake.y += velocityY * TILE_SIZE
