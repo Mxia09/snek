@@ -1,8 +1,8 @@
 import tkinter
-import random 
+import random
 
 ROWS = 25
-COLS = 35 
+COLS = 35
 TILE_SIZE = 25
 
 WINDOW_WIDTH = TILE_SIZE * COLS
@@ -46,11 +46,14 @@ food = Tile(10*TILE_SIZE, 10*TILE_SIZE)
 snake_body = [] #multiple snake tiles
 velocityX = 0 
 velocityY = 0 
+game_over = False
 
 def change_direction(e): #e = event
     # print(e.keysym)
-    global velocityX, velocityY
-    
+    global velocityX, velocityY, game_over
+    if (game_over):
+        return
+
     if (e.keysym == "Up" and velocityY != 1):
         velocityX = 0 
         velocityY = -1
@@ -65,15 +68,26 @@ def change_direction(e): #e = event
         velocityY = 0
 
 def move():
-    global snake
+    global snake, food, snake_body, game_over
+    if (game_over):
+        return
+
+    if (snake.x < 0 or snake.x >= WINDOW_WIDTH or snake.y < 0 or snake.y >= WINDOW_HEIGHT):
+        game_over = True
+        return
     
+    for tile in snake_body:
+        if (snake.x == tile.x and snake.y == tile.y):
+            game_over = True
+            return
+
     #collision
     if (snake.x == food.x and snake.y == food.y):
         snake_body.append(Tile(food.x, food.y))
         food.x = random.randint(0, COLS-1) * TILE_SIZE
         food.y = random.randint(0, ROWS-1) * TILE_SIZE
-    
-    
+
+
     #update snake body
     for i in range(len(snake_body)-1, -1, -1):
         tile = snake_body[i]
@@ -91,23 +105,23 @@ def move():
 def draw():
     global snake
     move()
-    
+
     canvas.delete("all")
-    
+
     #draw snake
     canvas.create_rectangle(snake.x, 
                             snake.y, 
                             snake.x + TILE_SIZE,
                             snake.y + TILE_SIZE,
                             fill="lime green")
-    
+
     #draw food
     canvas.create_rectangle(food.x, 
                             food.y, 
                             food.x + TILE_SIZE, 
                             food.y + TILE_SIZE, 
                             fill="white")
-    
+
     for tile in snake_body:
         canvas.create_rectangle(tile.x,
                                 tile.y,
