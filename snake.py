@@ -50,16 +50,16 @@ def change_direction(e): #e = event
     # print(e.keysym)
     global velocityX, velocityY
     
-    if (e.keysym == "Up"):
+    if (e.keysym == "Up" and velocityY != 1):
         velocityX = 0 
         velocityY = -1
-    elif (e.keysym == "Down"):
+    elif (e.keysym == "Down" and velocityY != -1):
         velocityX = 0
         velocityY = 1
-    elif (e.keysym == "Left"):
+    elif (e.keysym == "Left" and velocityX != 1):
         velocityX = -1
         velocityY = 0
-    elif (e.keysym == "Right"):
+    elif (e.keysym == "Right" and velocityX != -1):
         velocityX = 1
         velocityY = 0
 
@@ -72,6 +72,9 @@ def move():
 def draw():
     global snake
     move()
+    
+    canvas.delete("all")
+    
     #draw snake
     canvas.create_rectangle(snake.x, 
                             snake.y, 
